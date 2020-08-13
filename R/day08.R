@@ -1,0 +1,24 @@
+# Chi Zhang
+# 08/13/2020
+# Daily-exercise-08
+
+library(tidyverse)
+
+library(zoo)
+
+covid = read_csv('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv')
+
+state.of.interest = "California"
+
+covid %>%
+  filter(state == state.of.interest) %>%
+  group_by(date) %>%
+  summarise(cases = sum(cases)) %>%
+  mutate(newCases = cases - lag(cases), roll7 = rollmean(newCases, 7, fill = NA, align = "right")) %>%
+  ggplot(aes(x = date)) +
+  geom_col(aes(y = newCases), col = NA, fill = "#F5B8B5") +
+  geom_line(aes(y = roll7), col = "darkred", size = 1) +
+  theme_gray() +
+  labs(title = "New Reported Cases by day in California", x = "Date", y = "Newcases") +
+  theme(aspect.ratio = .5)
+
