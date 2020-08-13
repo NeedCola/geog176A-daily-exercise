@@ -19,7 +19,7 @@ Regioncases = inner_join(covid, areadata, by = "fips")%>%
 
 REGION = Regioncases %>%
   group_by(date, region) %>%
-  summarise(cases = max(cases), deaths = max(deaths)) %>%
+  summarise(cases = sum(cases), deaths = sum(deaths)) %>%
   pivot_longer(cols = c('cases', 'deaths')) %>%
   ungroup()
 
