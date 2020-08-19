@@ -1,0 +1,21 @@
+# Chi Zhang
+### 8/18/2020
+# Daily-exercise-09
+
+
+library(sf)
+library(tidyverse)
+
+us = USAboundaries::us_states() %>%
+  filter(name %in% c("Maine", "Arizona", "Arkansas", "Delaware", "Georgia", "Minnesota", "California", "District of Columbia", "Florida", "Idaho", "Illinois", "Iowa", "Kentucky", "Louisiana", "Maryland", "Michigan", "Missouri", "Montana", "New York", "Oregon", "Tennessee", "Texas", "Virginia", "Wisconsin", "South Dakota", "Utah", "Indiana", "Massachusetts", "Mississippi", "Nebraska", "New Mexico", "North Carolina", "Rhode Island", "Ohio", "Oklahoma", "South Carolina", "Colorado", "Kansas", "Connecticut", "Nevada", "Washington", "West Virginia", "Wyoming", "Alabama", "New Hampshire", "New Jersey", "North Dakota","Pennsylvania", "Vermont"))
+
+us_geom = us$geometry %>%
+  st_sfc()
+
+us_c_ml = st_combine(us_geom) %>%
+  st_cast("MULTILINESTRING") %>%
+  plot()
+
+us_u_ml = st_union(us_geom) %>%
+  st_cast("MULTILINESTRING") %>%
+  plot()
