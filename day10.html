@@ -385,9 +385,7 @@ summary {
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>us = USAboundaries::us_states() %&gt;%
-  filter(name %in% c(&quot;Maine&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;Delaware&quot;, &quot;Georgia&quot;, &quot;Minnesota&quot;, &quot;California&quot;, &quot;District of Columbia&quot;, &quot;Florida&quot;,
-                       &quot;Idaho&quot;, &quot;Illinois&quot;, &quot;Iowa&quot;, &quot;Kentucky&quot;, &quot;Louisiana&quot;, &quot;Maryland&quot;, &quot;Michigan&quot;, &quot;Missouri&quot;, &quot;Montana&quot;, &quot;New York&quot;, &quot;Oregon&quot;, 
-                       &quot;Tennessee&quot;, &quot;Texas&quot;, &quot;Virginia&quot;, &quot;Wisconsin&quot;, &quot;South Dakota&quot;, &quot;Utah&quot;, &quot;Indiana&quot;, &quot;Massachusetts&quot;, &quot;Mississippi&quot;,                                 &quot;Nebraska&quot;, &quot;New Mexico&quot;, &quot;North Carolina&quot;, &quot;Rhode Island&quot;, &quot;Ohio&quot;, &quot;Oklahoma&quot;, &quot;South Carolina&quot;, &quot;Colorado&quot;, &quot;Kansas&quot;,                           &quot;Connecticut&quot;, &quot;Nevada&quot;, &quot;Washington&quot;, &quot;West Virginia&quot;, &quot;Wyoming&quot;, &quot;Alabama&quot;, &quot;New Hampshire&quot;, &quot;New Jersey&quot;,                                      &quot;North Dakota&quot;,&quot;Pennsylvania&quot;, &quot;Vermont&quot;))
+  filter(!name %in% c(&quot;Alaska&quot;, &quot;Hawaii&quot;, &quot;Puerto Rico&quot;))
 
 us_geom = us$geometry %&gt;%
   st_sfc() 

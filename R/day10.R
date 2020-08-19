@@ -7,7 +7,7 @@ library(sf)
 library(tidyverse)
 
 us = USAboundaries::us_states() %>%
-  filter(name %in% c("Maine", "Arizona", "Arkansas", "Delaware", "Georgia", "Minnesota", "California", "District of Columbia", "Florida", "Idaho", "Illinois", "Iowa", "Kentucky", "Louisiana", "Maryland", "Michigan", "Missouri", "Montana", "New York", "Oregon", "Tennessee", "Texas", "Virginia", "Wisconsin", "South Dakota", "Utah", "Indiana", "Massachusetts", "Mississippi", "Nebraska", "New Mexico", "North Carolina", "Rhode Island", "Ohio", "Oklahoma", "South Carolina", "Colorado", "Kansas", "Connecticut", "Nevada", "Washington", "West Virginia", "Wyoming", "Alabama", "New Hampshire", "New Jersey", "North Dakota","Pennsylvania", "Vermont"))
+  filter(!name %in% c("Alaska", "Hawaii", "Puerto Rico"))
 
 us_geom = us$geometry %>%
   st_sfc()
