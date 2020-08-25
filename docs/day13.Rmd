@@ -1,0 +1,32 @@
+# Chi Zhang
+### 8/24/2020
+# Daily-exercise-13
+
+```{r}
+library(tidyverse)
+library(USAboundaries)
+library(sf)
+library(rmapshaper)
+
+US = USAboundaries::us_states() %>%
+  filter(!name %in% c("Alaska", "Hawaii", "Puerto Rico")) %>%
+  st_union() %>%
+  st_transform(5070)
+
+US250000 = st_simplify(US, dTolerance = 250000)
+
+mapview::npts(US250000)
+
+ggplot() +
+  geom_sf(data = US250000)
+
+
+US2.5 = ms_simplify(US, keep = .025)
+
+mapview::npts(US2.5)
+
+ggplot() +
+  geom_sf(data = US2.5)
+
+```
+
