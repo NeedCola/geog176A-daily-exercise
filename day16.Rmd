@@ -1,0 +1,51 @@
+# Chi Zhang
+### 8/30/2020
+# Daily-exercise-16
+
+```{r,warning=FALSE}
+library(tidyverse)
+library(sf)
+library(USAboundaries)
+library(rmapshaper)
+library(readxl)
+library(leaflet)
+
+counties = USAboundaries::us_counties() %>%
+  filter(!state_name %in% c("Alaska", "Hawaii", "Puerto Rico")) %>%
+  st_transform(5070)
+
+Miss = read_sf("data/majorrivers_0_0") %>%
+  filter(SYSTEM == "Mississippi")
+
+dam_leaflet = readxl::read_excel("data/NID2019_U.xlsx") %>%
+  filter(!is.na(LATITUDE)) %>%
+  st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 4326) %>%
+  st_transform(5070) %>%
+  select(dam_name = DAM_NAME, storage = NID_STORAGE, purposes = PURPOSES, year_completed = YEAR_COMPLETED, hazard = HAZARD) %>%
+  filter(hazard == "H")
+  
+DAM = st_join(counties, dam_leaflet) %>%
+  group_by(state_abbr) %>%
+  slice_max(storage, n = 1) %>%
+  select(dam_name, purposes) %>%
+  st_drop_geometry()
+
+DAM_leaflet = left_join(DAM, dam_leaflet)%>%
+  st_as_sf()
+
+
+leaflet() %>%
+  addProviderTiles(providers$CartoDB) %>%
+  addCircleMarkers(data = st_transform(DAM_leaflet, 4326), 
+                   color = "red",
+                   radius = ~storage/1500000,
+                   fillOpacity = 1,
+                   stroke = FALSE,
+                   popup = leafpop::popupTable(st_drop_geometry(DAM_leaflet[1:4]),
+                                               feature.id = FALSE, 
+                                               row.numbers = FALSE)) %>%
+  addPolylines(data = Miss)
+
+
+```
+
