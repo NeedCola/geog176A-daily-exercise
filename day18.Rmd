@@ -1,6 +1,6 @@
 # Chi Zhang
-### 8/31/2020
-# Daily-exercise-17
+### 9/1/2020
+# Daily-exercise-18
 
 ```{r}
 library(tidyverse)
@@ -25,11 +25,11 @@ bb = goleta %>%
 ele = crop(bb, goleta)
 
 goleta_ele = plot(ele, main="Elevation of Goleta")
-#writeRaster(goleta_ele, filename = "data/goleta_ele.tif", overwrite = TRUE)
+writeRaster(ele, filename = "data/goleta_ele.tif", overwrite = TRUE)
 
 raster(ele)
 
-FUN = function(x) { ifelse(x <= 0,NA,1)}
+FUN = function(x) { ifelse(x <= 0, NA, 1)}
 
 
 ele2 = calc(ele, FUN)
@@ -37,20 +37,23 @@ ele2 = calc(ele, FUN)
 mask = bb *ele2
 
 
-layer1 = plot(ele2, col = viridis::viridis(500), main="Mask") 
-layer2 = plot(mask, col = viridis::viridis(500), main="elevation")
+#layer1 = plot(ele2, col = viridis::viridis(500), main="Mask") 
+#layer2 = plot(mask, col = viridis::viridis(500), main="elevation")
 
 
 quarts = cellStats(mask, fivenum)
 
-rcl = data.frame(quarts[1:4], quarts[2:5], 1:4)
 
-reclassify(mask, rcl, include.lowest=TRUE) %>%
-  plot(col = viridis::viridis(6), main="topo.bounds")
+rcl = data.frame(min = seq(0,500,100), max = seq(10,600,100), lab = c(0:5))
+#rcl = data.frame(quarts[1:4], quarts[2:5], 1:4)
 
+r = reclassify(mask, rcl, lowerTRUE=TRUE) 
+#  plot(col = viridis::viridis(6), main="topo.bounds")
 
+s = stack(ele, ele2, mask, r) %>%
+  setNames(c("elevation", "land.mask", "terrain", "topography"))
 
-
+plot(s, col = viridis::viridis(256))
 
 ```
 
