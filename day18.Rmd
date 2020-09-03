@@ -53,6 +53,8 @@ r = reclassify(mask, rcl, lowerTRUE=TRUE)
 s = stack(ele, ele2, mask, r) %>%
   setNames(c("elevation", "land.mask", "terrain", "topography"))
 
+writeRaster(s, filename = "data/s.tif", overwrite = TRUE)
+
 plot(s, col = viridis::viridis(256))
 
 ```

@@ -1,0 +1,50 @@
+# Chi Zhang
+### 9/2/2020
+# Daily-exercise-19
+
+
+```{r}
+library(tidyverse)
+library(sf)
+library(readr)
+library(elevatr)
+library(raster)
+library(osmdata)
+library(leaflet)
+
+r = raster("data/goleta_ele.tif")
+
+s = raster("data/s.tif")
+ 
+bb = r %>%
+  st_bbox() %>%
+  st_as_sfc() %>%
+  st_transform(4326)
+
+osm = opq(bb) %>%
+  add_osm_feature(key = 'amenity', value = "restaurant") %>%
+  osmdata_sf()
+
+restaurant = osm$osm_points %>%
+  filter(!is.na(name)) %>%
+  st_transform(crs(s)) %>%
+  st_intersection(st_as_sfc(st_bbox(r))) 
+  
+r_elev = raster::extract(r, restaurant)
+
+R = restaurant %>%
+  mutate(elevation = r_elev)
+
+pop = paste0(R$elevation)
+
+leaflet() %>%
+  addProviderTiles(providers$CartoDB) %>%
+  addMarkers(data = st_transform(R, 4326),
+             label = ~name,
+             popup = pop) 
+  
+  
+
+
+```
+
