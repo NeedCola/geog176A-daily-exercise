@@ -1,0 +1,37 @@
+# Chi Zhang
+### 9/5/2020
+# Daily-exercise-20
+
+```{r}
+library(tidyverse)
+library(sf)
+library(raster)
+library(climateR)
+library(RColorBrewer)
+
+params = c("prcp", "tmax", "tmin")
+AOI = USAboundaries::us_states() %>%
+  filter(name == "California")
+ca = climateR::getTerraClim(AOI, params, startDate = "2018-09-01") %>%
+  stack() %>%
+  setNames(params)
+
+values = values(ca)
+
+head(values)
+
+idx = which(!is.na(values))
+v = na.omit(values)
+vs = scale(v)
+
+E = kmeans(vs, 12, iter.max = 100)
+
+kmeans_raster = ca$tmax
+values(kmeans_raster) = NA
+
+kmeans_raster[idx] <- E$cluster
+plot(kmeans_raster, col = RColorBrewer::brewer.pal(12, "Spectral"))
+
+
+```
+
